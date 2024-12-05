@@ -95,6 +95,11 @@ public class GameContextLoader {
 
         while (sc.hasNextLine()) {
             String type = sc.nextLine();
+
+            if (type.isBlank()) {
+                continue;
+            }
+
             if (type.equals("ITEMDEF")) {
                 rtn.put(sc.nextLine(), new Item(sc.nextLine(), sc.nextLine()));
             }else {
