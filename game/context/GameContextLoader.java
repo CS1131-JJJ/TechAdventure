@@ -124,6 +124,7 @@ public class GameContextLoader {
         List<Item> items = new ArrayList<>();
         LinkedHashMap<Item, String> requiredItems = new LinkedHashMap<>();
         Map<Direction, String> map = new HashMap<>();
+        boolean isVisible = false;
 
         Scanner sc = new Scanner(file);
 
@@ -168,6 +169,13 @@ public class GameContextLoader {
                         sc.nextLine()
                     );
                     break;
+                case "VISIBLE":
+                    if (sc.nextLine().equals("TRUE")) {
+                        isVisible = true;
+                    }else {
+                        isVisible = false;
+                    }
+                    break;
                 default:
                     sc.close();
                     throw new Exception("Exception occurred while parsing room, type " + type + " not recognized.");
@@ -175,8 +183,8 @@ public class GameContextLoader {
         }
         directionMap.put(name, map);
         sc.close();
-
-        return new Room(name, description, items, requiredItems, entryEventMap.getOrDefault(name, (c) -> {}));
+        
+        return new Room(name, description, items, requiredItems, entryEventMap.getOrDefault(name, (c) -> {}), isVisible);
     }
 
     /**
