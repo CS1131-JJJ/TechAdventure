@@ -27,10 +27,13 @@ public class GameContextLoader {
     private final String roomSubdir = "rooms";
     private final String roomFileExtension = ".roomsave";
     private final String playerFile = "player.psave";
+    private final String itemFile = "items.itemsave";
 
     private final Map<String, Consumer<GameContext>> entryEventMap;
 
-    private final HashMap<String, Map<Direction, String>> directionMap = new HashMap<>();
+    private final Map<String, Map<Direction, String>> directionMap = new HashMap<>();
+
+    private Map<String, Item> itemMap;
 
     public GameContextLoader(File saveDir, Map<String, Consumer<GameContext>> entryEventMap) {
         this.entryEventMap = entryEventMap;
@@ -38,6 +41,9 @@ public class GameContextLoader {
     }
 
     public GameContext loadContext(OutputWriter writer) throws Exception {
+        //load items
+        itemMap = getItems(new File(saveDir, itemFile));
+
         //load rooms
         File roomDir = new File(saveDir, roomSubdir);
         Map<String, Room> rooms = new HashMap<>();
@@ -83,6 +89,24 @@ public class GameContextLoader {
         
     }
 
+    private Map<String, Item> getItems(File file) throws Exception {
+        Scanner sc = new Scanner(file);
+        Map<String, Item> rtn = new HashMap<>();
+
+        while (sc.hasNextLine()) {
+            String type = sc.nextLine();
+            if (type.equals("ITEMDEF")) {
+                rtn.put(sc.nextLine(), new Item(sc.nextLine(), sc.nextLine()));
+            }else {
+                sc.close();
+                throw new Exception("Exception occurred while parsing items, type " + type + " not recognized.");
+            }
+        }
+
+        sc.close();
+        return rtn;
+    }
+
     /**
      * Parse a room object from the given file. 
      * @param file Text file containing room state information. 
@@ -94,9 +118,11 @@ public class GameContextLoader {
         String description = null;
         List<Item> items = new ArrayList<>();
         LinkedHashMap<Item, String> requiredItems = new LinkedHashMap<>();
-        HashMap<Direction, String> map = new HashMap<>();
+        Map<Direction, String> map = new HashMap<>();
 
         Scanner sc = new Scanner(file);
+
+        String id;
 
         while (sc.hasNextLine()) {
             String type = sc.nextLine();
@@ -113,11 +139,21 @@ public class GameContextLoader {
                     description = sc.nextLine();
                     break;
                 case "ITEM":
-                    items.add(new Item(sc.nextLine(), sc.nextLine()));
+                    id = sc.nextLine();
+                    if (!itemMap.containsKey(id)) {
+                        sc.close();
+                        throw new Exception("Exception occurred while parsing room, item with ID " + id + " does not exist.");
+                    }
+                    items.add(itemMap.get(id));
                     break;
                 case "REQUIRED":
+                    id = sc.nextLine();
+                    if (!itemMap.containsKey(id)) {
+                        sc.close();
+                        throw new Exception("Exception occurred while parsing room, item with ID " + id + " does not exist.");
+                    }
                     requiredItems.put(
-                        new Item(sc.nextLine(), sc.nextLine()), 
+                        itemMap.get(id),
                         sc.nextLine()
                     );
                     break;
@@ -161,7 +197,12 @@ public class GameContextLoader {
             if (type.equals("CURR")) {
                 roomName = sc.nextLine();
             }else if(type.equals("ITEM")) {
-                inv.add(new Item(sc.nextLine(), sc.nextLine()));
+                String id = sc.nextLine();
+                if (!itemMap.containsKey(id)) {
+                    sc.close();
+                    throw new Exception("Exception occurred while parsing player, item with ID " + id + " does not exist.");
+                }
+                inv.add(itemMap.get(id));
             }else {
                 sc.close();
                 throw new Exception("Exception occurred while parsing player, type " + type + " not recognized.");
