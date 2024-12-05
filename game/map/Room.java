@@ -169,6 +169,11 @@ public class Room {
         return item;
     }
 
+    public List<Item> getItems() {
+        //makes the list immutable. 
+        return List.of(items.toArray(new Item[0]));
+    }
+
     /**
      * Get the room in the specified direction. If there is no room in that direction accessible from this room, return is null. 
      * @param dir A direction
