@@ -16,7 +16,6 @@ public class InputParser {
     private final Map<String, Command> commandTable = new HashMap<>();
 
     public InputParser(GameContext context) {
-        this.context = context;
         commandTable.put("GO", new GoCommand());
         commandTable.put("GRAB", new GrabCommand());
         commandTable.put("MAP", new MapCommand());
