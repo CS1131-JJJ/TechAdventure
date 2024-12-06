@@ -58,11 +58,8 @@ public class MapCommand extends Command {
                 }
             }
 
-            //map = fill(map, 3, 10, 7, 17, space);
-
-            print(map);
-
-            // context.getOutputWriter().write(output);
+            context.getOutputWriter().write(charrArrToString(map));
+            
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -78,6 +75,16 @@ public class MapCommand extends Command {
         for (int i = x1; i < x2; i++) {
             for (int j = y1; j < y2; j++) {
                 output[i][j] = character;
+            }
+        }
+        return output;
+    }
+    
+    private String charrArrToString(char[][] arr) {
+        String output = "";
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[i].length; j++) {
+                output += arr[i][j];
             }
         }
         return output;
