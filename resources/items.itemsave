@@ -1,49 +1,54 @@
 ITEMDEF
 1
 Jacket
-jacket description here
+A bright pink snow jacket lined with a thick fleece. The fabric feels waterproof and windproof, with a cozy hood edged in fox fur. Despite its color, it promises warmth and survival.
 
 ITEMDEF
 2
 knife
-knife description
+A sturdy hunting knife with a slightly tarnished blade. The handle is wrapped in a warm black leather, offering a firm grip. It looks like it's seen its fair share of use.
 
 ITEMDEF
 3
 note
-note description
+A crumpled up piece of paper with hastily scrawled handwriting. The message is simple but urgent: "Top of Mount Ripley. Helicopter evac. Good luck." The ink is slightly smudged, as though written in a hurry, or under duress
 
 ITEMDEF
 4
 chello
-chello description
+A traditional wooden cello, its garnish is cracked and faded from many years of use. Though it looks particularly broken, the strings are taut, and you wonder if it could still hold a tune, or a secret…
 
 ITEMDEF
 5
 shovel
-shovel description
+A large, heavy-duty shovel painted a vibrant blue. Its metal blade gleams under the light, and the wide handle feels sturdy enough to clear the deepest drifts.
 
 ITEMDEF
 6
 Snowshoes
-Snowshoes description
+A pair of wide, lightweight frames with tightly woven webbing. The bindings are adjustable, designed to strap securely over your boot, making them perfect for trekking through deep snow.
 
 ITEMDEF
 7
 skis
-skis description
+A pair of sleek powder skis with a matte black finish. The edges are slightly nicked from previous use, but the bindings are secure, ready to carry you swiftly across the snowy terrain.
 
 ITEMDEF
 8
 raygun 
-ray gun description
+A sleek futuristic weapon with glowing blue accents running down its barrel. Its humming energy core pulses faintly, signaling its readiness.
 
 ITEMDEF
 9
 code
-code description
+A bloodstained peace of paper, so worn down its left soft to the touch. A faint encrypted message is noticeable on the paper. The message reads as follows: “$+!  &+@  (-)  %-#  ^/@”
 
 ITEMDEF
 10
 key
-key description
+A small, polished key with intricate engravings along its handle. It gleams brightly, as if it’s been well cared for, a stark contrast to the bleakness of your surroundings.
+
+ITEMDEF
+11
+car key
+A small set of keys trapped by a rustic star wars keychain shaped as Yoda . They jingle softly with each step.
