@@ -26,6 +26,7 @@ public class InputParser {
         commandTable.put("INVENTORY", new InventoryCommand());
         commandTable.put("RESTORE", new RestoreCommand());
         commandTable.put("HELP", new HelpCommand());
+        commandTable.put("USE", new UseCommand());
         // NEW COMMANDS MUST BE IN ALL CAPS
 
         setContext(context);

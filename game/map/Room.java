@@ -83,6 +83,14 @@ public class Room {
     }
 
     /**
+     * Get the current directions. 
+     */
+    public Map<Direction, Room> getDirections() {
+        //make return map immutable
+        return Map.copyOf(rooms);
+    }
+
+    /**
      * This method should be called when the player enters the room. 
      * This method checks that the player has the required items. If they do not, the game ends. If the player has the proper items the room entry event is triggered. 
      * @param context The GameContext
