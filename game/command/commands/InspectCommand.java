@@ -25,7 +25,8 @@ public class InspectCommand extends Command {
         List<Item> inventory = context.getPlayer().getInventory();
         for (Item item : inventory) {
             if (item.name().toUpperCase().equals(itemName)) {
-                context.getOutputWriter().write(item.description() + "is in your inventory\n");
+                context.getOutputWriter().write(item.name() + " is in your inventory.\n");
+                context.getOutputWriter().write(item.description() + "\n");
                 return;
             }
         }
@@ -34,7 +35,8 @@ public class InspectCommand extends Command {
         List<Item> roomItems = context.getPlayer().getCurrentRoom().getItems();
         for (Item item : roomItems) {
             if (item.name().toUpperCase().equals(itemName)) {
-                context.getOutputWriter().write(item.description() + "is in the current room\n");
+                context.getOutputWriter().write(item.name() + " is in the current room.\n");
+                context.getOutputWriter().write(item.description() + "\n");
                 return;
             }
         }
