@@ -1,5 +1,8 @@
 package game.map;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -199,6 +202,45 @@ public class Room {
 
     public String getDescription() {
         return description;
+    }
+
+    /**
+     * Write the state of this object to the given file
+     * @param file File write to 
+     * @param itemMap Map relating the Item objects to the item IDs 
+     * @throws IOException
+     */
+    public void writeToFile(File file, Map<Item, String> itemMap) throws IOException {
+        FileWriter writer = new FileWriter(file);
+
+        writer.append("NAME\n");
+        writer.append(name + "\n");
+
+        writer.append("DESC\n");
+        writer.append(description + "\n");
+
+        writer.append("VISIBLE\n");
+        writer.append(isVisible ? "TRUE\n" : "FALSE\n");
+
+        for (Entry<Direction, Room> entry : rooms.entrySet()) {
+            writer.append("ROOM\n");
+            writer.append(entry.getKey().name() + "\n");
+            writer.append(entry.getValue().name + "\n");
+        }
+
+        for (Item i : items) {
+            writer.append("ITEM\n");
+            writer.append(itemMap.get(i) + "\n");
+        }
+
+        for (Entry<Item, String> entry : requiredItems.entrySet()) {
+            writer.append("REQUIRED\n");
+            writer.append(itemMap.get(entry.getKey()) + "\n");
+            writer.append(entry.getValue() + "\n");
+        }
+
+        writer.flush();
+        writer.close();
     }
 
 }

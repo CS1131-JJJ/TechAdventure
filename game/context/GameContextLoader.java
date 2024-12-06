@@ -1,6 +1,8 @@
 package game.context;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -23,7 +25,7 @@ import game.player.Player;
  */
 public class GameContextLoader {
 
-    private final File saveDir;
+    private final File saveDir = new File("resources");
     private final String roomSubdir = "rooms";
     private final String roomFileExtension = ".roomsave";
     private final String playerFile = "player.psave";
@@ -33,14 +35,68 @@ public class GameContextLoader {
 
     private final Map<String, Map<Direction, String>> directionMap = new HashMap<>();
 
-    private Map<String, Item> itemMap;
+    private Map<String, Item> itemMap; //used for loading from file
 
-    public GameContextLoader(File saveDir, Map<String, Consumer<GameContext>> entryEventMap) {
+    private Map<Item, String> itemReverseMap; //used for writing to file
+
+    public GameContextLoader(Map<String, Consumer<GameContext>> entryEventMap) {
         this.entryEventMap = entryEventMap;
-        this.saveDir = saveDir;
     }
 
+    /**
+     * Save the current game state.
+     * @param saveDir The directory to save the files to. 
+     * @param context The context to save. 
+     * @throws Exception
+     */
+    public void saveContext(File saveDir, GameContext context) throws Exception {
+        if (saveDir.equals(this.saveDir)) {
+            throw new Exception("Cannot save game state to default state directory.");
+        }
+
+        if(!saveDir.exists()) {
+            saveDir.mkdirs();
+        }
+
+        List<Item> items = new ArrayList<>();
+
+        for (Room r : context.getRooms()) {
+            items.addAll(r.getItems());
+        }
+        items.addAll(context.getPlayer().getInventory());
+
+        itemReverseMap = saveItems(new File(saveDir, itemFile), items);
+
+        File roomSaveDir = new File(saveDir, roomSubdir);
+        roomSaveDir.mkdir();
+        for (int i = 0; i < context.getRooms().size(); i++) {
+            context.getRooms().get(i)
+            .writeToFile(
+                new File(roomSaveDir, i+roomFileExtension), itemReverseMap
+            ); 
+        }
+
+        savePlayer(new File(saveDir, playerFile), context.getPlayer());
+    }
+
+    /**
+     * Load the default game context. The game context is loaded from the default directory. 
+     * @param writer OutputWriter to construct context with
+     * @return The GameContext which represents the starting context for a new game
+     * @throws Exception
+     */
     public GameContext loadContext(OutputWriter writer) throws Exception {
+        return loadContext(writer, saveDir);
+    }
+
+    /**
+     * Load the game context from the given directory. 
+     * @param writer OutputWriter to construct context with
+     * @param saveDir Directory containing save files. 
+     * @return GameContext based on the contents of the save files.
+     * @throws Exception
+     */
+    public GameContext loadContext(OutputWriter writer, File saveDir) throws Exception {
         //load items
         itemMap = getItems(new File(saveDir, itemFile));
 
@@ -84,7 +140,8 @@ public class GameContextLoader {
         return new GameContext(
             rooms.values().toArray(new Room[0]), 
             getPlayer(new File(saveDir, playerFile), rooms), 
-            writer
+            writer,
+            this
         );
         
     }
@@ -94,14 +151,14 @@ public class GameContextLoader {
         Map<String, Item> rtn = new HashMap<>();
 
         while (sc.hasNextLine()) {
-            String type = sc.nextLine();
+            String type = sc.nextLine().trim();
 
             if (type.isBlank()) {
                 continue;
             }
 
             if (type.equals("ITEMDEF")) {
-                rtn.put(sc.nextLine(), new Item(sc.nextLine(), sc.nextLine()));
+                rtn.put(sc.nextLine().trim(), new Item(sc.nextLine().trim(), sc.nextLine().trim()));
             }else {
                 sc.close();
                 throw new Exception("Exception occurred while parsing items, type " + type + " not recognized.");
@@ -110,6 +167,54 @@ public class GameContextLoader {
 
         sc.close();
         return rtn;
+    }
+
+    /**
+     * Save items to the given file. 
+     * @param file File to write to 
+     * @param items Items to save
+     * @return A Map relating the Item objects to the IDs which will be used for this save. 
+     * @throws IOException
+     */
+    private Map<Item, String> saveItems(File file, List<Item> items) throws IOException {
+        FileWriter writer = new FileWriter(file);
+
+        Map<Item, String> map = new HashMap<>();
+
+        for (int i = 0; i < items.size(); i++) {
+            writer.append("ITEMDEF\n");
+            writer.append(i + "\n");
+            writer.append(items.get(i).name() + "\n");
+            writer.append(items.get(i).description() + "\n");
+
+            map.put(items.get(i), i + "");
+        }
+
+        writer.flush();
+        writer.close();
+
+        return map;
+    }
+
+    /**
+     * Save player state to a file
+     * @param file File to save state to 
+     * @param player Player state to save
+     * @throws IOException
+     */
+    private void savePlayer(File file, Player player) throws IOException {
+        FileWriter writer = new FileWriter(file);
+
+        writer.append("CURR\n");
+        writer.append(player.getCurrentRoom().getName() + "\n");
+
+        for (Item i : player.getInventory()) {
+            writer.append("ITEM\n");
+            writer.append(itemReverseMap.get(i) + "\n");
+        }
+
+        writer.flush();
+        writer.close();
     }
 
     /**
@@ -131,7 +236,7 @@ public class GameContextLoader {
         String id;
 
         while (sc.hasNextLine()) {
-            String type = sc.nextLine();
+            String type = sc.nextLine().trim();
 
             if (type.isBlank()) {
                 continue;
@@ -139,13 +244,13 @@ public class GameContextLoader {
 
             switch (type) {
                 case "NAME":
-                    name = sc.nextLine();
+                    name = sc.nextLine().trim();
                     break;
                 case "DESC":
-                    description = sc.nextLine();
+                    description = sc.nextLine().trim();
                     break;
                 case "ITEM":
-                    id = sc.nextLine();
+                    id = sc.nextLine().trim();
                     if (!itemMap.containsKey(id)) {
                         sc.close();
                         throw new Exception("Exception occurred while parsing room, item with ID " + id + " does not exist.");
@@ -153,24 +258,24 @@ public class GameContextLoader {
                     items.add(itemMap.get(id));
                     break;
                 case "REQUIRED":
-                    id = sc.nextLine();
+                    id = sc.nextLine().trim();
                     if (!itemMap.containsKey(id)) {
                         sc.close();
                         throw new Exception("Exception occurred while parsing room, item with ID " + id + " does not exist.");
                     }
                     requiredItems.put(
                         itemMap.get(id),
-                        sc.nextLine()
+                        sc.nextLine().trim()
                     );
                     break;
                 case "ROOM":
                     map.put(
-                        Direction.valueOf(sc.nextLine()),
-                        sc.nextLine()
+                        Direction.valueOf(sc.nextLine().trim()),
+                        sc.nextLine().trim()
                     );
                     break;
                 case "VISIBLE":
-                    if (sc.nextLine().equals("TRUE")) {
+                    if (sc.nextLine().trim().equals("TRUE")) {
                         isVisible = true;
                     }else {
                         isVisible = false;
@@ -201,16 +306,16 @@ public class GameContextLoader {
         Scanner sc = new Scanner(file);
 
         while(sc.hasNextLine()) {
-            String type = sc.nextLine();
+            String type = sc.nextLine().trim();
 
             if (type.isBlank()) {
                 continue;
             }
 
             if (type.equals("CURR")) {
-                roomName = sc.nextLine();
+                roomName = sc.nextLine().trim();
             }else if(type.equals("ITEM")) {
-                String id = sc.nextLine();
+                String id = sc.nextLine().trim();
                 if (!itemMap.containsKey(id)) {
                     sc.close();
                     throw new Exception("Exception occurred while parsing player, item with ID " + id + " does not exist.");

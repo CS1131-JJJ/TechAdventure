@@ -14,13 +14,15 @@ public class GameContext {
     private final Room[] rooms;
     private final Player player;
     private final OutputWriter writer;
+    private final GameContextLoader loader;
 
     private boolean gameIsOver = false;
 
-    public GameContext(Room[] rooms, Player player, OutputWriter writer) {
+    public GameContext(Room[] rooms, Player player, OutputWriter writer, GameContextLoader loader) {
         this.player = player;
         this.rooms = rooms;
         this.writer = writer;
+        this.loader = loader;
     }
 
     public Player getPlayer() {
@@ -33,6 +35,10 @@ public class GameContext {
 
     public OutputWriter getOutputWriter() {
         return writer;
+    }
+
+    public GameContextLoader getLoader() {
+        return loader;
     }
 
     public void endGame() {

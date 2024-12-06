@@ -1,6 +1,5 @@
 package game;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -25,7 +24,7 @@ public class Main {
         OutputWriter writer = new ConsoleOutputWriter();
         //TODO populate entry event map here
 
-        GameContext context = new GameContextLoader(new File("resources"), entryEventMap).loadContext(writer);
+        GameContext context = new GameContextLoader(entryEventMap).loadContext(writer);
         InputReader reader = new ConsoleInputReader();
         InputParser parser = new InputParser(context);
 

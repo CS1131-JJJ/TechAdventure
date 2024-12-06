@@ -22,6 +22,7 @@ public class InputParser {
         commandTable.put("GRAB", new GrabCommand());
         commandTable.put("DROP", new DropCommand());
         commandTable.put("LOOK", new LookCommand());
+        commandTable.put("SAVE", new SaveCommand());
     }
 
     public void processCommand(String input) {
