@@ -24,6 +24,7 @@ public class InputParser {
         commandTable.put("LOOK", new LookCommand());
         commandTable.put("SAVE", new SaveCommand());
         commandTable.put("Inspect", new InspectCommand());
+        commandTable.put("Inventory", new InventoryCommand());
 
     }
 
