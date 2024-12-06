@@ -21,6 +21,8 @@ public class InputParser {
         this.context = context;
         commandTable.put("GO", new GoCommand());
         commandTable.put("GRAB", new GrabCommand());
+        commandTable.put("DROP", new DropCommand());
+
     }
 
     public void processCommand(String input) {
