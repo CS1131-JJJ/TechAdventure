@@ -1,0 +1,20 @@
+NAME
+Tech Trails 
+
+DESC
+You have made it to the tech trails, your key clicks smoothly unlocking the door. The room smells of dust and old wood. Snowshoes and skis are propped up neatly against the wall. 
+
+REQUIRED
+10
+You're facing an old building that reads Tech Trails. You try the door but it  is locked tight. Snowshoes and skis are visible inside, but without the key, you need to turn back to wads.
+
+ITEM 
+6
+
+ITEM
+7
+
+ROOM
+NORTH
+Wadsworth Hall
+

@@ -2,12 +2,20 @@ NAME
 Walker Lawn
 
 DESC
-Description here
+As you enter walker lawn the chill bites at your exposed skin, but your jacket keeps you warm enough to press on. The open expanse of snow leaves you with few trails.
 
 REQUIRED
 1
-You froze to death
+You have entered the walker lawn, The cold is relentless. Without a jacket You shiver uncontrollably as frost creeps over your body. Darkness soon fills your eyes as you succumb to the freezing temperatures.
 
 ROOM
 SOUTH
 Wadsworth Hall
+
+ROOM
+NORTH
+DHH
+
+ROOM
+EAST
+Rozsa

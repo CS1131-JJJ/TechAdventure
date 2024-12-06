@@ -2,11 +2,21 @@ NAME
 Wadsworth Hall
 
 DESC
-Description here
+You’re in Wadsworth Hall, the starting point of your journey. The room feels oddly calm compared to the chaos outside. A jacket, a knife, and a note are scattered on the floor.
 
 ITEM
 1
 
+ITEM
+2
+
+ITEM
+3
+
 ROOM
 NORTH
 Walker Lawn
+
+ROOM
+SOUTH
+Tech Trails
