@@ -22,6 +22,8 @@ public class InputParser {
         commandTable.put("GO", new GoCommand());
         commandTable.put("GRAB", new GrabCommand());
         commandTable.put("DROP", new DropCommand());
+        commandTable.put("LOOK", new LookCommand());
+
 
     }
 
