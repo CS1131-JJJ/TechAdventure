@@ -24,6 +24,7 @@ public class InputParser {
         commandTable.put("SAVE", new SaveCommand());
         commandTable.put("INSPECT", new InspectCommand());
         commandTable.put("INVENTORY", new InventoryCommand());
+        commandTable.put("RESTORE", new RestoreCommand());
         commandTable.put("HELP", new HelpCommand());
         // NEW COMMANDS MUST BE IN ALL CAPS
 
