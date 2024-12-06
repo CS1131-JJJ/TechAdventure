@@ -20,6 +20,7 @@ public class InputParser {
         this.context = context;
         commandTable.put("GO", new GoCommand());
         commandTable.put("GRAB", new GrabCommand());
+        commandTable.put("MAP", new MapCommand());
         commandTable.put("DROP", new DropCommand());
         commandTable.put("LOOK", new LookCommand());
         commandTable.put("SAVE", new SaveCommand());
