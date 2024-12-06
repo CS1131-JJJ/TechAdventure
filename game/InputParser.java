@@ -6,6 +6,7 @@ import java.util.Map;
 import game.command.Command;
 import game.command.commands.GoCommand;
 import game.command.commands.GrabCommand;
+import game.command.commands.MapCommand;
 import game.context.GameContext;
 
 /**
@@ -21,6 +22,7 @@ public class InputParser {
         this.context = context;
         commandTable.put("GO", new GoCommand());
         commandTable.put("GRAB", new GrabCommand());
+        commandTable.put("MAP", new MapCommand());
     }
 
     public void processCommand(String input) {
