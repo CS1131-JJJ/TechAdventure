@@ -24,7 +24,10 @@ public class Main {
         OutputWriter writer = new ConsoleOutputWriter();
         //TODO populate entry event map here
 
-        GameContext context = new GameContextLoader(entryEventMap).loadContext(writer);
+
+        GameContextLoader loader = new GameContextLoader(entryEventMap);
+        loader.loadContext(writer);
+        GameContext context = loader.getLoadedContext();
         InputReader reader = new ConsoleInputReader();
         InputParser parser = new InputParser(context);
 
@@ -34,8 +37,10 @@ public class Main {
         while(!context.isGameOver()) {
             writer.write("> ");
             parser.processCommand(reader.getInput());
+
+            //if the restore command was used we change to the new context. 
+            context = loader.getLoadedContext(); 
+            parser.setContext(context);
         }
-
-
     }
 }

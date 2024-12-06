@@ -26,6 +26,8 @@ import game.player.Player;
  */
 public class GameContextLoader {
 
+    private GameContext context = null;
+
     private final File saveDir = new File("resources");
     private final String roomSubdir = "rooms";
     private final String roomFileExtension = ".roomsave";
@@ -42,6 +44,10 @@ public class GameContextLoader {
 
     public GameContextLoader(Map<String, Consumer<GameContext>> entryEventMap) {
         this.entryEventMap = entryEventMap;
+    }
+
+    public GameContext getLoadedContext() {
+        return context;
     }
 
     /**
@@ -82,22 +88,22 @@ public class GameContextLoader {
 
     /**
      * Load the default game context. The game context is loaded from the default directory. 
+     * The loaded context is accessible from the getter method. 
      * @param writer OutputWriter to construct context with
-     * @return The GameContext which represents the starting context for a new game
      * @throws Exception
      */
-    public GameContext loadContext(OutputWriter writer) throws Exception {
-        return loadContext(writer, saveDir);
+    public void loadContext(OutputWriter writer) throws Exception {
+        loadContext(writer, saveDir);
     }
 
     /**
      * Load the game context from the given directory. 
+     * The loaded context is accessible from the getter method. 
      * @param writer OutputWriter to construct context with
      * @param saveDir Directory containing save files. 
-     * @return GameContext based on the contents of the save files.
      * @throws Exception
      */
-    public GameContext loadContext(OutputWriter writer, File saveDir) throws Exception {
+    public void loadContext(OutputWriter writer, File saveDir) throws Exception {
         //load items
         itemMap = getItems(new File(saveDir, itemFile));
 
@@ -138,7 +144,7 @@ public class GameContextLoader {
             //all Rooms now have a complete map
         }
 
-        return new GameContext(
+        context = new GameContext(
             rooms.values().toArray(new Room[0]), 
             getPlayer(new File(saveDir, playerFile), rooms), 
             writer,
@@ -285,8 +291,8 @@ public class GameContextLoader {
                     }
                     break;
                 case "COORDS":
-                    mapCoordFirst.x = sc.nextInt() - 1;
-                    mapCoordFirst.y = sc.nextInt() - 1;
+                    mapCoordFirst.x = sc.nextInt();
+                    mapCoordFirst.y = sc.nextInt();
                     mapCoordSecond.x = sc.nextInt();
                     mapCoordSecond.y = sc.nextInt();
                     break;
