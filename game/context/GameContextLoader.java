@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.function.Consumer;
+import java.awt.Point;
 
 import game.io.OutputWriter;
 import game.map.Direction;
@@ -230,6 +231,8 @@ public class GameContextLoader {
         LinkedHashMap<Item, String> requiredItems = new LinkedHashMap<>();
         Map<Direction, String> map = new HashMap<>();
         boolean isVisible = false;
+        Point mapCoordFirst = new Point(0, 0);
+        Point mapCoordSecond = new Point(0, 0);
 
         Scanner sc = new Scanner(file);
 
@@ -281,6 +284,12 @@ public class GameContextLoader {
                         isVisible = false;
                     }
                     break;
+                case "COORDS":
+                    mapCoordFirst.x = sc.nextInt() - 1;
+                    mapCoordFirst.y = sc.nextInt() - 1;
+                    mapCoordSecond.x = sc.nextInt();
+                    mapCoordSecond.y = sc.nextInt();
+                    break;
                 default:
                     sc.close();
                     throw new Exception("Exception occurred while parsing room, type " + type + " not recognized.");
@@ -289,7 +298,7 @@ public class GameContextLoader {
         directionMap.put(name, map);
         sc.close();
         
-        return new Room(name, description, items, requiredItems, entryEventMap.getOrDefault(name, (c) -> {}), isVisible);
+        return new Room(name, description, items, requiredItems, entryEventMap.getOrDefault(name, (c) -> {}), isVisible, mapCoordFirst, mapCoordSecond);
     }
 
     /**

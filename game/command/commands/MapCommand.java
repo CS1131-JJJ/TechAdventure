@@ -30,8 +30,8 @@ public class MapCommand extends Command {
             scanner.close();
 
             // Converts map file into array of chars
-            int width = 30;
-            int height = 80;
+            int width = 32;
+            int height = 83;
             char[][] map = new char[width][height];
             int count = 0;
             for (int i = 0; i < map.length; i++) {
@@ -43,12 +43,24 @@ public class MapCommand extends Command {
                 }
             }
 
-            // DEBUG prints map to console
-            for (int i = 0; i < map.length; i++) {
-                for (int j = 0; j < map[i].length; j++) {
-                    System.out.print(map[i][j]);
+            char space = '\u0020';
+
+            for (int i = 0; i < context.getRooms().size(); i++) {
+                if (!context.getRooms().get(i).getIsVisible()) {
+                    map = fill(
+                        map, 
+                        context.getRooms().get(i).getMapCoordFirst().x,
+                        context.getRooms().get(i).getMapCoordFirst().y,
+                        context.getRooms().get(i).getMapCoordSecond().x,
+                        context.getRooms().get(i).getMapCoordSecond().y,
+                        space
+                    );
                 }
             }
+
+            //map = fill(map, 3, 10, 7, 17, space);
+
+            print(map);
 
             // context.getOutputWriter().write(output);
         } catch (FileNotFoundException e) {
@@ -58,6 +70,25 @@ public class MapCommand extends Command {
 
         //context.getPlayer().getCurrentRoom();
         //context.getRooms()
+    }
+
+    // Fills a given area within a char array with a given character
+    private char[][] fill(char[][] arr, int x1, int y1, int x2, int y2, char character) {
+        char[][] output = arr;
+        for (int i = x1; i < x2; i++) {
+            for (int j = y1; j < y2; j++) {
+                output[i][j] = character;
+            }
+        }
+        return output;
+    }
+
+    private void print(char[][] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[i].length; j++) {
+                System.out.print(arr[i][j]);
+            }
+        }
     }
     
 }

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
+import java.awt.Point;
 
 import game.context.GameContext;
 
@@ -29,6 +30,9 @@ public class Room {
     private final Consumer<GameContext> entryEvent;
     
     private boolean isVisible;
+
+    private Point mapCoordFirst;
+    private Point mapCoordSecond;
     
     /**
      * 
@@ -45,7 +49,7 @@ public class Room {
      * @param entryEvent A GameContext consumer which runs when the user enters
      *                   this room, provided they have all the required items. 
      */
-    public Room(String name, String description, List<Item> items, LinkedHashMap<Item, String> requiredItems, Consumer<GameContext> entryEvent, boolean visible) {
+    public Room(String name, String description, List<Item> items, LinkedHashMap<Item, String> requiredItems, Consumer<GameContext> entryEvent, boolean visible, Point mapCoordFirst, Point mapCoordSecond) {
         this.name = name;
         this.description = description;
 
@@ -58,6 +62,9 @@ public class Room {
         this.requiredItems = requiredItems;
 
         this.isVisible = visible;
+
+        this.mapCoordFirst = mapCoordFirst;
+        this.mapCoordSecond = mapCoordSecond;
     }
 
     /**
@@ -204,6 +211,14 @@ public class Room {
         return description;
     }
 
+    public Point getMapCoordFirst() {
+        return mapCoordFirst;
+    }
+
+    public Point getMapCoordSecond() {
+        return mapCoordSecond;
+    }
+
     /**
      * Write the state of this object to the given file
      * @param file File write to 
@@ -238,6 +253,12 @@ public class Room {
             writer.append(itemMap.get(entry.getKey()) + "\n");
             writer.append(entry.getValue() + "\n");
         }
+
+        writer.append("COORDS\n");
+        writer.append(mapCoordFirst.x + " " + mapCoordFirst.y + "\n");
+        writer.append(mapCoordSecond.x + " " + mapCoordSecond.y + "\n");
+
+        writer.append(description);
 
         writer.flush();
         writer.close();
