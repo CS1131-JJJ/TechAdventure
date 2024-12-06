@@ -25,7 +25,7 @@ public class Room {
     private final LinkedHashMap<Item, String> requiredItems;
     private final Consumer<GameContext> entryEvent;
     
-    private boolean isVisible = false;
+    private boolean isVisible;
     
     /**
      * 
@@ -42,7 +42,7 @@ public class Room {
      * @param entryEvent A GameContext consumer which runs when the user enters
      *                   this room, provided they have all the required items. 
      */
-    public Room(String name, String description, List<Item> items, LinkedHashMap<Item, String> requiredItems, Consumer<GameContext> entryEvent) {
+    public Room(String name, String description, List<Item> items, LinkedHashMap<Item, String> requiredItems, Consumer<GameContext> entryEvent, boolean visible) {
         this.name = name;
         this.description = description;
 
@@ -53,6 +53,8 @@ public class Room {
 
         this.entryEvent = entryEvent;
         this.requiredItems = requiredItems;
+
+        this.isVisible = visible;
     }
 
     /**
@@ -88,7 +90,7 @@ public class Room {
         }
     }
 
-    private String getRoomDescription() {
+    public String getRoomDescription() {
         StringBuilder builder = new StringBuilder();
         builder.append(description);
         builder.append("\n\n");

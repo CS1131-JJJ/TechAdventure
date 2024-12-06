@@ -1,0 +1,28 @@
+NAME
+Plaza
+ 
+DESC
+As you enter the Plaza the Husky Statue looms ahead. Lines in the deep snow offer an idea that something lies beneath the husky. With just your hands you are useless against all the snow.
+
+REQUIRED
+1
+Entering the plaza the wind howls viciously. Your exposed skin freezes, and you can no longer move. The cold claims you where you stand.
+
+ROOM
+NORTH
+MEEM
+
+ROOM
+SOUTH
+Rehki 
+
+ROOM
+EAST
+Walker Lawn
+
+ROOM
+WEST
+Admin Building
+
+
+
