@@ -6,7 +6,7 @@ import game.map.Item;
 import java.text.ParseException;
 
 /**
- * @author [Your Name]
+ * @author Julie Truckenbrod
  * 
  * Command to drop items from inventory into the current room
  */
