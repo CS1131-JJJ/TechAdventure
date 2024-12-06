@@ -14,7 +14,7 @@ import java.util.List;
 public class InspectCommand extends Command {
 
     public InspectCommand() {
-        super(1); // take arguemnt of the item name
+        super(1); // take argument of the item name
     }
 
     @Override

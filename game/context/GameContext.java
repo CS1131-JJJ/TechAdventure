@@ -15,6 +15,7 @@ public class GameContext {
     private final Player player;
     private final OutputWriter writer;
     private final GameContextLoader loader;
+    private String[] commandNames;
 
     private boolean gameIsOver = false;
 
@@ -47,6 +48,14 @@ public class GameContext {
 
     public boolean isGameOver() {
         return gameIsOver;
+    }
+
+    public String[] getAllCommands() {
+        return commandNames;
+    }
+
+    public void setAllCommands(String[] arr) {
+        commandNames = arr;
     }
     
 }

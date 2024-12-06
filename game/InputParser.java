@@ -25,16 +25,19 @@ public class InputParser {
         commandTable.put("SAVE", new SaveCommand());
         commandTable.put("INSPECT", new InspectCommand());
         commandTable.put("INVENTORY", new InventoryCommand());
-        commandTable.put("RESTORE", new RestoreCommand());
+        commandTable.put("HELP", new HelpCommand());
+        // NEW COMMANDS MUST BE IN ALL CAPS
 
+        setContext(context);
     }
-
+    
     /**
      * Update the game context. Necessary for loading states from the disk. 
      * @param context new game context 
      */
     public void setContext(GameContext context) {
         this.context = context;
+        context.setAllCommands(commandTable.keySet().toArray(new String[0]));
     }
 
     public void processCommand(String input) {
