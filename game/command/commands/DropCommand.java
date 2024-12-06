@@ -19,7 +19,7 @@ public class DropCommand extends Command {
     @Override
     public void run(GameContext context) throws ParseException {
         // Try to get the item from player's inventory
-        Item item = context.getPlayer().getItem(arguments[0].toUpperCase());
+        Item item = context.getPlayer().getItem(arguments[0]);
         if (item == null) {
             context.getOutputWriter().write("You don't have " + arguments[0].toLowerCase() + " in your inventory.\n");
             return;

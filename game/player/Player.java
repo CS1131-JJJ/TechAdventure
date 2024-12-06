@@ -45,7 +45,7 @@ public class Player {
     public Item getItem(String name) {
         Item item = null;
         for (int i = 0; i < inventory.size(); i++) {
-            if (inventory.get(i).name().equals(name)) {
+            if (inventory.get(i).name().toUpperCase().equals(name)) {
                 item = inventory.get(i);
                 inventory.remove(i);
                 break;
