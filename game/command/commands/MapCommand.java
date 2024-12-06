@@ -28,7 +28,7 @@ public class MapCommand extends Command {
             Scanner scanner = new Scanner(mapFile);
             int width = scanner.nextInt();
             int height = scanner.nextInt();
-            String flush = scanner.nextLine();
+            scanner.nextLine();
             String input = scanner.useDelimiter("\\A").next(); // Read the whole input
             scanner.close();
 
@@ -56,6 +56,14 @@ public class MapCommand extends Command {
                         context.getRooms().get(i).getMapCoordSecond().y,
                         space
                     );
+                }else if (!context.getRooms().get(i).equals(context.getPlayer().getCurrentRoom())) {
+                    map = removeX(
+                        map,
+                        context.getRooms().get(i).getMapCoordFirst().x,
+                        context.getRooms().get(i).getMapCoordFirst().y,
+                        context.getRooms().get(i).getMapCoordSecond().x,
+                        context.getRooms().get(i).getMapCoordSecond().y
+                    );
                 }
             }
 
@@ -77,6 +85,19 @@ public class MapCommand extends Command {
         }
         return output;
     }
+
+    //Remove 'X' character from the given region
+    private char[][] removeX(char[][] arr, int x1, int y1, int x2, int y2) {
+        for (int i = x1; i < x2; i++) {
+            for (int j = y1; j < y2; j++) {
+                if (arr[i][j] == 'X') {
+                    arr[i][j] = ' ';
+                    return arr;
+                }
+            }
+        }
+        return arr;
+    }
     
     // Collapses a 2D array of chars to a string
     private String charrArrToString(char[][] arr) {
@@ -87,15 +108,6 @@ public class MapCommand extends Command {
             }
         }
         return output;
-    }
-
-    // Prints char array to console
-    private void print(char[][] arr) {
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[i].length; j++) {
-                System.out.print(arr[i][j]);
-            }
-        }
     }
     
 }
