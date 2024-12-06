@@ -90,7 +90,7 @@ public class Room {
         }
     }
 
-    private String getRoomDescription() {
+    public String getRoomDescription() {
         StringBuilder builder = new StringBuilder();
         builder.append(description);
         builder.append("\n\n");
