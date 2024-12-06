@@ -11,7 +11,7 @@ import game.context.GameContext;
 /**
  * @author Jacob Charmley
  * 
- * Command to pick up items
+ * Command to display the map
  */
 public class MapCommand extends Command {
 
@@ -26,12 +26,13 @@ public class MapCommand extends Command {
             // Reads map file
             File mapFile = new File("resources/map.txt");
             Scanner scanner = new Scanner(mapFile);
+            int width = scanner.nextInt();
+            int height = scanner.nextInt();
+            String flush = scanner.nextLine();
             String input = scanner.useDelimiter("\\A").next(); // Read the whole input
             scanner.close();
 
             // Converts map file into array of chars
-            int width = 32;
-            int height = 83;
             char[][] map = new char[width][height];
             int count = 0;
             for (int i = 0; i < map.length; i++) {
@@ -59,14 +60,11 @@ public class MapCommand extends Command {
             }
 
             context.getOutputWriter().write(charrArrToString(map));
-            
+
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
+            System.out.println("Issues with the map file loading");
             e.printStackTrace();
         }
-
-        //context.getPlayer().getCurrentRoom();
-        //context.getRooms()
     }
 
     // Fills a given area within a char array with a given character
@@ -80,6 +78,7 @@ public class MapCommand extends Command {
         return output;
     }
     
+    // Collapses a 2D array of chars to a string
     private String charrArrToString(char[][] arr) {
         String output = "";
         for (int i = 0; i < arr.length; i++) {
@@ -90,6 +89,7 @@ public class MapCommand extends Command {
         return output;
     }
 
+    // Prints char array to console
     private void print(char[][] arr) {
         for (int i = 0; i < arr.length; i++) {
             for (int j = 0; j < arr[i].length; j++) {
