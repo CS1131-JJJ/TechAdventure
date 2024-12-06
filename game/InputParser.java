@@ -4,8 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import game.command.Command;
-import game.command.commands.GoCommand;
-import game.command.commands.GrabCommand;
+import game.command.commands.*;
 import game.context.GameContext;
 
 /**
@@ -23,8 +22,6 @@ public class InputParser {
         commandTable.put("GRAB", new GrabCommand());
         commandTable.put("DROP", new DropCommand());
         commandTable.put("LOOK", new LookCommand());
-
-
     }
 
     public void processCommand(String input) {
