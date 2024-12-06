@@ -54,6 +54,8 @@ public class GameContext {
         return commandNames;
     }
 
-    public v
+    public void setAllCommands(String[] arr) {
+        commandNames = arr;
+    }
     
 }
