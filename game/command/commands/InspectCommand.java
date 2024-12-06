@@ -1,10 +1,9 @@
 package game.command.commands;
 
-import java.text.ParseException;
-
 import game.command.Command;
 import game.context.GameContext;
 import game.map.Item;
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -26,7 +25,7 @@ public class InspectCommand extends Command {
         List<Item> inventory = context.getPlayer().getInventory();
         for (Item item : inventory) {
             if (item.name().toUpperCase().equals(itemName)) {
-                context.getOutputWriter().write(item.description() + "\n");
+                context.getOutputWriter().write(item.description() + "is in your inventory\n");
                 return;
             }
         }
@@ -35,7 +34,7 @@ public class InspectCommand extends Command {
         List<Item> roomItems = context.getPlayer().getCurrentRoom().getItems();
         for (Item item : roomItems) {
             if (item.name().toUpperCase().equals(itemName)) {
-                context.getOutputWriter().write(item.description() + "\n");
+                context.getOutputWriter().write(item.description() + "is in the current room\n");
                 return;
             }
         }
