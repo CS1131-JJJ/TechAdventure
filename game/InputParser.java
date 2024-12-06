@@ -1,11 +1,10 @@
 package game;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 import game.command.Command;
 import game.command.commands.*;
 import game.context.GameContext;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Jacob Herrmann
@@ -24,6 +23,8 @@ public class InputParser {
         commandTable.put("DROP", new DropCommand());
         commandTable.put("LOOK", new LookCommand());
         commandTable.put("SAVE", new SaveCommand());
+        commandTable.put("Inspect", new InspectCommand());
+
     }
 
     public void processCommand(String input) {
