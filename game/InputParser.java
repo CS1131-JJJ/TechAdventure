@@ -12,8 +12,8 @@ import java.util.Map;
  */
 public class InputParser {
     
-    private GameContext context;
-    private final Map<String, Command> commandTable = new HashMap<>();
+    private final GameContext context;
+    private Map<String, Command> commandTable = new HashMap<>();
 
     public InputParser(GameContext context) {
         this.context = context;
@@ -25,16 +25,8 @@ public class InputParser {
         commandTable.put("SAVE", new SaveCommand());
         commandTable.put("INSPECT", new InspectCommand());
         commandTable.put("INVENTORY", new InventoryCommand());
-        commandTable.put("RESTORE", new RestoreCommand());
-
-    }
-
-    /**
-     * Update the game context. Necessary for loading states from the disk. 
-     * @param context new game context 
-     */
-    public void setContext(GameContext context) {
-        this.context = context;
+        commandTable.put("HELP", new HelpCommand());
+        // NEW COMMANDS MUST BE IN ALL CAPS
     }
 
     public void processCommand(String input) {
