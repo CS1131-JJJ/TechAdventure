@@ -258,8 +258,6 @@ public class Room {
         writer.append(mapCoordFirst.x + " " + mapCoordFirst.y + "\n");
         writer.append(mapCoordSecond.x + " " + mapCoordSecond.y + "\n");
 
-        writer.append(description);
-
         writer.flush();
         writer.close();
     }
