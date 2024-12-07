@@ -13,12 +13,14 @@ public class ForceLeaveEvent {
     private final String successMessage;
     private final String failMessage;
     private final String returnRoom;
+    private final Runnable successCallback;
 
-    public ForceLeaveEvent(String itemName, String successMessage, String failMessage, String returnRoom) {
+    public ForceLeaveEvent(String itemName, String successMessage, String failMessage, String returnRoom, Runnable successCallback) {
         this.itemName = itemName;
         this.successMessage = successMessage;
         this.failMessage = failMessage;
         this.returnRoom = returnRoom;
+        this.successCallback = successCallback;
     }
 
     public void apply(GameContext context) {
@@ -26,6 +28,7 @@ public class ForceLeaveEvent {
         
         if (containsName(player.getInventory(), itemName)) {
             context.getOutputWriter().write(successMessage);
+            successCallback.run();
         }else {
             context.getOutputWriter().write(failMessage);
             player.setRoom(getRoom(context.getRooms(), returnRoom), context);
