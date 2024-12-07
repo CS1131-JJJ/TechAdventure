@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,9 +96,9 @@ public class TechAdventure {
 
       byte[] response = generatePage(
          processCommand(command),
-         "",
+         game.map.Map.getMap(context.getRooms(), context.getPlayer().getCurrentRoom().getName()),
          context.getPlayer()
-      ).getBytes();
+      ).getBytes(StandardCharsets.UTF_8);
 
 
       Headers h = httpExchange.getResponseHeaders();
