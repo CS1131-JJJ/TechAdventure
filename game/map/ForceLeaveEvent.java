@@ -5,6 +5,14 @@ import java.util.List;
 import game.context.GameContext;
 import game.player.Player;
 
+/**
+ * @author Jacob Herrmann
+ * @author Jacob Charmley
+ * @author Julie Truckenbrod
+ * @author Braden McKenzie
+ * 
+ * Entry event to force a player to leave room if they do not have a certain item. 
+ */
 public class ForceLeaveEvent {
     
     private final String itemName;

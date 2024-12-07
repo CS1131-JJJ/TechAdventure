@@ -6,7 +6,11 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
+ * @author Jacob Herrmann
  * @author Jacob Charmley
+ * @author Julie Truckenbrod
+ * @author Braden McKenzie
+ * 
  */
 public class Map {
 

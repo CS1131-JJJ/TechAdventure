@@ -31,6 +31,9 @@ import game.player.Player;
 
 /**
  * @author Jacob Herrmann
+ * @author Jacob Charmley
+ * @author Julie Truckenbrod
+ * @author Braden McKenzie
  */
 public class TechAdventure {
    final int PORT = 1234; // Server port 1234 is usually free

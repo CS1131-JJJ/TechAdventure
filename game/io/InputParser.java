@@ -8,6 +8,10 @@ import java.util.Map;
 
 /**
  * @author Jacob Herrmann
+ * @author Jacob Charmley
+ * @author Julie Truckenbrod
+ * @author Braden McKenzie
+ * 
  * This class parses input from the user into commands. 
  */
 public class InputParser {

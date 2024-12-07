@@ -5,7 +5,10 @@ import java.text.ParseException;
 import game.context.GameContext;
 
 /**
- * @author Jacob Herrmann with Braden McKenzie, Julie Truckenbrod, Jacob Charmley
+ * @author Jacob Herrmann
+ * @author Jacob Charmley
+ * @author Julie Truckenbrod
+ * @author Braden McKenzie
  * 
  * The base class for commands. All commands must extend this class. 
  */

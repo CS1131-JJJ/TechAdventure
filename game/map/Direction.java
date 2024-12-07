@@ -2,6 +2,9 @@ package game.map;
 
 /**
  * @author Jacob Herrmann
+ * @author Jacob Charmley
+ * @author Julie Truckenbrod
+ * @author Braden McKenzie
  * 
  * Possible directions that players can go. 
  */

@@ -8,9 +8,12 @@ import game.map.Item;
 import game.map.Room;
 
 /**
- * @author Jacob Herrmann with Braden McKenzie, Julie Truckenbrod, Jacob Charmley
+ * @author Jacob Herrmann
+ * @author Jacob Charmley
+ * @author Julie Truckenbrod
+ * @author Braden McKenzie
  * 
- * This class represents the current state of the player. 
+ * This class represents the current state of the player
  */
 public class Player {
 

@@ -21,6 +21,9 @@ import game.player.Player;
 
 /**
  * @author Jacob Herrmann
+ * @author Jacob Charmley
+ * @author Julie Truckenbrod
+ * @author Braden McKenzie
  * 
  * Load the game context from the given directory. 
  */

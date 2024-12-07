@@ -15,7 +15,10 @@ import java.awt.Point;
 import game.context.GameContext;
 
 /**
- * @author Jacob Herrmann with Braden McKenzie, Julie Truckenbrod, Jacob Charmley
+ * @author Jacob Herrmann
+ * @author Jacob Charmley
+ * @author Julie Truckenbrod
+ * @author Braden McKenzie
  * 
  * A Room which the player may enter.  
  */

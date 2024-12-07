@@ -7,6 +7,9 @@ import game.player.Player;
 
 /**
  * @author Jacob Herrmann
+ * @author Jacob Charmley
+ * @author Julie Truckenbrod
+ * @author Braden McKenzie
  * 
  * The current context of the game. 
  */
