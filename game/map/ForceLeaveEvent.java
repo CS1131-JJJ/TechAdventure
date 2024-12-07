@@ -1,10 +1,8 @@
-package game;
+package game.map;
 
 import java.util.List;
 
 import game.context.GameContext;
-import game.map.Item;
-import game.map.Room;
 import game.player.Player;
 
 public class ForceLeaveEvent {

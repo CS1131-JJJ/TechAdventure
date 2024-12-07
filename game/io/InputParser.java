@@ -1,4 +1,4 @@
-package game;
+package game.io;
 import game.command.Command;
 import game.command.commands.*;
 import game.context.GameContext;
