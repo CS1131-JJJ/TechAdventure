@@ -28,21 +28,23 @@
                     <p>$DESC</p>
                 </div>
                 <div class="out">
-                    <textarea disabled>$OUT</textarea>
+                    <textarea id="output" disabled>$OUT</textarea>
                 </div>
             </div>
             <div class="map">
-                <textarea disabled style="background-color: black;">MAP</textarea>
+                <textarea disabled>$MAP</textarea>
             </div>
         </div>
 
         <form method="POST">
-            <input $GAMEOVER class="text" type="text" name="command">
+            <input $GAMEOVER autofocus autocomplete="off" class="text" type="text" name="command">
             <input $GAMEOVER class="button" type="submit" value="Run">
         </form>
 
         <script>
             $JS
+            var textarea = document.getElementById('output');
+            textarea.scrollTop = textarea.scrollHeight;
         </script>
 
         <style>
@@ -77,11 +79,14 @@
             }
             textarea {
                 color: white;
-                background-color: #262626;
+                background-color: black;
                 width: 100%;
                 height: 100%;
                 box-sizing: border-box;
                 resize: none;
+            }
+            #output {
+                background-color: #262626;
             }
             form {
                 display: inline-flex;
