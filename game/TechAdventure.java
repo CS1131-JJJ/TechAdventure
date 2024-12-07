@@ -20,7 +20,7 @@ import game.player.Player;
  * 
  * The entry point of the application. 
  */
-public class Main {
+public class TechAdventure {
 
     public static void main(String[] args) throws Exception {
         Map<String, Consumer<GameContext>> entryEventMap = new HashMap<>();
