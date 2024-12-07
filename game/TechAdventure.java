@@ -36,7 +36,7 @@ import game.player.Player;
  * @author Braden McKenzie
  */
 public class TechAdventure {
-   final int PORT = 1234; // Server port 1234 is usually free
+   private static int PORT;
    private final String htmlTemplate;
 
    private final GameContextLoader loader;
@@ -51,6 +51,11 @@ public class TechAdventure {
    private boolean joeEventFinished = false;
 
    public static void main(String[] args) throws Exception {
+      if (args.length == 1) {
+         PORT = Integer.parseInt(args[0]);
+      }else {
+         PORT = 2112;
+      }
       TechAdventure webFormExample = new TechAdventure();
       webFormExample.launchServer();
    }
@@ -67,6 +72,8 @@ public class TechAdventure {
       loader.loadContext(writer);
       context = loader.getLoadedContext();
       parser = new InputParser(context);
+
+      writer.write("\n\nA zombie apocalypse has occurred. Your goal: survive and escape.\n\n");
 
       context.getPlayer().setRoom(
             context.getPlayer().getCurrentRoom(),
