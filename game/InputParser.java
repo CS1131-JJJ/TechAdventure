@@ -44,7 +44,7 @@ public class InputParser {
 
     public void processCommand(String input) {
         if (input.isBlank()) {
-            context.getOutputWriter().write("You must input a command\n");
+            return;
         }
 
         String[] inputArray = input.trim().toUpperCase().split(" ");

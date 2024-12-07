@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Text Adventure Game</title>
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="list">
+                Available Commands
+                <ul>
+                  $CMDS
+                </ul>
+            </div>
+            <div class="list">
+                Inventory
+                <ul>
+                    $INV
+                </ul>
+                Room Items
+                <ul>
+                    $RM_INV
+                </ul>
+            </div>
+            <div class="main">
+                <div>
+                    <h1>$NAME</h1>
+                    <p>$DESC</p>
+                </div>
+                <div class="out">
+                    <textarea disabled>$OUT</textarea>
+                </div>
+            </div>
+            <div class="map">
+                <textarea disabled style="background-color: black;">MAP</textarea>
+            </div>
+        </div>
+
+        <form method="POST">
+            <input $GAMEOVER class="text" type="text" name="command">
+            <input $GAMEOVER class="button" type="submit" value="Run">
+        </form>
+
+        <script>
+            $JS
+        </script>
+
+        <style>
+            body {
+                background-color: black;
+                color: white;
+                text-align: center;
+            }
+            div {
+                border: white 1px solid;
+            }
+            .container {
+                display: flex;
+                flex-direction: row;
+            }
+            .list {
+                width: 15%;
+                height: 75vh
+            }
+            .main {
+                display: flex;
+                flex-direction: column;
+                width: 40%;
+                height: 75vh
+            }
+            .out {
+                flex-grow: 1;
+            }
+            .map {
+                width: 30%;
+                height: 75vh
+            }
+            textarea {
+                color: white;
+                background-color: #262626;
+                width: 100%;
+                height: 100%;
+                box-sizing: border-box;
+                resize: none;
+            }
+            form {
+                display: inline-flex;
+                justify-content: center;
+                width: 100vw;
+                margin-top: 10px;
+            }
+            li {
+                text-align: left;
+            }
+            .text {
+                width: 35vw;
+            }
+            .button {
+                width: 3vw;
+                margin-left: 1vw;
+                margin-right: 1vw;
+            }
+
+        </style>
+    </body>
+</html>

@@ -1,8 +1,22 @@
 package game;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+
+import com.sun.net.httpserver.Headers;
+import com.sun.net.httpserver.HttpContext;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpServer;
 
 import game.command.Command;
 import game.command.commands.LookCommand;
@@ -10,124 +24,236 @@ import game.context.GameContext;
 import game.context.GameContextLoader;
 import game.io.InputReader;
 import game.io.OutputWriter;
-import game.io.console.ConsoleInputReader;
-import game.io.console.ConsoleOutputWriter;
 import game.map.Room;
 import game.player.Player;
 
 /**
- * @author Jacob Herrmann with Braden McKenzie, Julie Truckenbrod, Jacob Charmley
- * 
- * The entry point of the application. 
+ * @author Jacob Herrmann
  */
 public class TechAdventure {
+   final int PORT = 1234; // Server port 1234 is usually free
+   private final String htmlTemplate;
 
-    public static void main(String[] args) throws Exception {
-        Map<String, Consumer<GameContext>> entryEventMap = new HashMap<>();
-        OutputWriter writer = new ConsoleOutputWriter();
-        InputReader reader = new ConsoleInputReader();
+   private final GameContextLoader loader;
+   private GameContext context;
+   private final InputParser parser;
+   private final Map<String, Consumer<GameContext>> entryEventMap;
+   private final OutputWriter writer;
+   private final InputReader reader = null;
 
-        entryEventMap.put("Tech Trails", (context) -> {
-            new ForceLeaveEvent(
-                "KEY", 
-                "You have made it to the tech trails, your key clicks smoothly unlocking the door. The room smells of dust and old wood. Snowshoes and skis are propped up neatly against the wall.\n",
-                "You're facing an old building that reads Tech Trails. You try the door but it  is locked tight. Snowshoes and skis are visible inside, but without the key, you need to turn back to wads.\n",
-                "Wadsworth Hall"
-            ).apply(context);
-        });
+   public static void main(String[] args) throws Exception {
+      TechAdventure webFormExample = new TechAdventure();
+      webFormExample.launchServer();
+   }
 
-        entryEventMap.put("Under Statue", (context) -> {
-            new ForceLeaveEvent(
-                "CELLO",
-                "" ,
-                "“Sorry kid, but we've got no deal today. You’re missing… something” He waves his hand dismissively, and before you can protest, the world seems to twist around you. The next thing you know, you're standing back in the plaza, Joe's laughter still ringing in your ears.\n",
-                "Plaza"
-            ).apply(context);
-        });
+   public TechAdventure() throws Exception {
+      htmlTemplate = loadHTML(new File("resources/main.html"));
 
-        entryEventMap.put("Admin Building", (context) -> {
-            Player player = context.getPlayer();
-            String input;
-            context.getOutputWriter().write("Standing at the entrance of the admin building key room, you try the door, but it’s locked. The keypad blinks mockingly at you, demanding the correct input.\n");
-            while(true) {
-                context.getOutputWriter().write("ENTER CODE (exit to leave) > ");
-                input = reader.getInput().trim().toUpperCase();
+      entryEventMap = new HashMap<>();
+      populateEntryEventMap();
 
-                if (input.equals("EXIT")) {
-                    context.getOutputWriter().write("Defeated, you return to the plaza.\n");
-                    player.setRoom(ForceLeaveEvent.getRoom(context.getRooms(), "Plaza"), context);
-                    break;
-                }else if (input.equals("59923")) {
-                    context.getOutputWriter().write("The keypad beeps as you input the code. The key room door creaks open, revealing a golden key suspended from the ceiling. You grip your weapon tightly as you scan the room for threats\n");
-                    break;
-                }else {
-                    if (containsNonDigit(input)) {
-                        context.getOutputWriter().write("\"ERROR: DIGITS ONLY\"\n");
-                    }else if(input.length() != 5) {
-                        context.getOutputWriter().write("\"ERROR: MUST BE 5 DIGITS\"\n");
-                    }else {
-                        context.getOutputWriter().write("\"ERROR: INCORRECT CODE\"\n");
-                    }
-                }
+      writer = new OutputWriter();
+
+      loader = new GameContextLoader(entryEventMap);
+      loader.loadContext(writer);
+      context = loader.getLoadedContext();
+      parser = new InputParser(context);
+
+      context.getPlayer().setRoom(
+            context.getPlayer().getCurrentRoom(),
+            context);
+   }
+
+   private String loadHTML(File file) throws FileNotFoundException {
+      Scanner sc = new Scanner(file);
+      StringBuilder builder = new StringBuilder();
+      while (sc.hasNextLine()) {
+         builder.append(sc.nextLine().trim());
+      }
+      sc.close();
+
+      return builder.toString();
+   }
+
+   public void launchServer() throws IOException {
+      HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
+      HttpContext context = server.createContext("/");
+      context.setHandler(this::handleRequest);
+      server.start();
+      System.out.printf("Server started on port %s\n", PORT);
+   }
+
+   private void handleRequest(HttpExchange httpExchange) throws IOException {
+      String command = "";
+      if (httpExchange.getRequestMethod().equals("POST")) {
+         command = httpRequestToCommand(httpExchange.getRequestBody());
+      }
+
+      if (!command.isBlank()) {
+         context.getOutputWriter().write(">" + command + "\n");
+      }
+
+      byte[] response = generatePage(
+         processCommand(command),
+         "",
+         context.getPlayer()
+      ).getBytes();
+
+
+      Headers h = httpExchange.getResponseHeaders();
+      h.set("Content-Type", "text/html");
+      httpExchange.sendResponseHeaders(200, response.length);
+      OutputStream os = httpExchange.getResponseBody();
+      os.write(response);
+      os.close();
+
+      if (context.isGameOver()) {
+         System.exit(0);
+      }
+   }
+
+   private String generatePage(String output, String map, Player player) {
+      Room room = player.getCurrentRoom();
+
+      String rtn = htmlTemplate
+                  .replace("$NAME", room.getName())
+                  .replace("$MAP", map)
+                  .replace("$OUT", output)
+                  .replace("$RM_INV", listToHtmlList(room.getItems(), (i, b) -> b.append(i.name())))
+                  .replace("$CMDS", listToHtmlList(List.of(context.getAllCommands()), (i, b) -> b.append(i)))
+                  .replace("$INV", listToHtmlList(player.getInventory(), (i, b) -> b.append(i.name())));
+
+      if (context.isGameOver()) {
+         return rtn
+               .replace("$DESC", "")
+               .replace("$JS", context.hasWon() ? "alert('You win!')" : "alert('Game over.')")
+               .replace("$GAMEOVER", "disabled");
+      }else {
+         return rtn
+               .replace("$DESC", room.getDescription())
+               .replace("$JS", "")
+               .replace("$GAMEOVER", "");
+      }
+   }
+
+   private <T> String listToHtmlList(List<T> list, BiConsumer<T, StringBuilder> func) {
+      if (list.isEmpty()) {
+         return "<li>Empty</li>";
+      }
+      StringBuilder builder = new StringBuilder();
+      for (T i : list) {
+         builder.append("<li>");
+         func.accept(i, builder);
+         builder.append("</li>");
+      }
+      return builder.toString();
+   }
+
+   private String processCommand(String input) {
+      parser.processCommand(input);
+
+      context = loader.getLoadedContext();
+      parser.setContext(context);
+
+      return context.getOutputWriter().getOutput();
+   }
+
+   private String httpRequestToCommand(InputStream input) throws IOException{
+      StringBuilder builder = new StringBuilder();
+      int i = input.read();
+      while (i != -1) {
+         builder.append((char) i);
+         i = input.read();
+      }
+      return builder.toString().substring(8).replace('+', ' '); //remove header info
+   }
+
+   private boolean containsNonDigit(String str) {
+      for (char c : str.toCharArray()) {
+         if (!Character.isDigit(c)) {
+            return true;
+         }
+      }
+      return false;
+   }
+
+   private void populateEntryEventMap() {
+
+      entryEventMap.put("Tech Trails", (context) -> {
+         new ForceLeaveEvent(
+               "KEY",
+               "You have made it to the tech trails, your key clicks smoothly unlocking the door. The room smells of dust and old wood. Snowshoes and skis are propped up neatly against the wall.\n",
+               "You're facing an old building that reads Tech Trails. You try the door but it  is locked tight. Snowshoes and skis are visible inside, but without the key, you need to turn back to wads.\n",
+               "Wadsworth Hall").apply(context);
+      });
+
+      entryEventMap.put("Under Statue", (context) -> {
+         new ForceLeaveEvent(
+               "CELLO",
+               "",
+               "“Sorry kid, but we've got no deal today. You’re missing… something” He waves his hand dismissively, and before you can protest, the world seems to twist around you. The next thing you know, you're standing back in the plaza, Joe's laughter still ringing in your ears.\n",
+               "Plaza").apply(context);
+      });
+
+      entryEventMap.put("Admin Building", (context) -> {
+         Player player = context.getPlayer();
+         String input;
+         context.getOutputWriter().write(
+               "Standing at the entrance of the admin building key room, you try the door, but it’s locked. The keypad blinks mockingly at you, demanding the correct input.\n");
+         while (true) {
+            context.getOutputWriter().write("ENTER CODE (exit to leave) > ");
+            input = reader.getInput().trim().toUpperCase();
+
+            if (input.equals("EXIT")) {
+               context.getOutputWriter().write("Defeated, you return to the plaza.\n");
+               player.setRoom(ForceLeaveEvent.getRoom(context.getRooms(), "Plaza"), context);
+               break;
+            } else if (input.equals("59923")) {
+               context.getOutputWriter().write(
+                     "The keypad beeps as you input the code. The key room door creaks open, revealing a golden key suspended from the ceiling. You grip your weapon tightly as you scan the room for threats\n");
+               break;
+            } else {
+               if (containsNonDigit(input)) {
+                  context.getOutputWriter().write("\"ERROR: DIGITS ONLY\"\n");
+               } else if (input.length() != 5) {
+                  context.getOutputWriter().write("\"ERROR: MUST BE 5 DIGITS\"\n");
+               } else {
+                  context.getOutputWriter().write("\"ERROR: INCORRECT CODE\"\n");
+               }
             }
-        });
+         }
+      });
 
-        entryEventMap.put("Mt. Ripley", (context) -> {
-            context.getOutputWriter().write("\nYOU WIN!!\n");
-            context.endGame();
-        });
+      entryEventMap.put("Mt. Ripley", (context) -> {
+         context.getOutputWriter().write("\nYOU WIN!!\n");
+         context.win();
+      });
 
-        entryEventMap.put("DHH", (context) -> {
-            Player player = context.getPlayer();
-            
-            if (!ForceLeaveEvent.containsName(player.getInventory(), "SHOVEL")) {
-                context.getOutputWriter().write("A man holding a shovel grins from a corner, offering a riddle: \"Answer this, and you may pass. Fail, and you won’t leave...\" \n");
-                while(true) {
-                    context.getOutputWriter().write(" \"What... do computers eat?\" \n> ");
-                    String input = reader.getInput().trim().toUpperCase();
-                    if (input.equals("CHIPS")) {
-                        break;
-                    }
-                    context.getOutputWriter().write(" \"WRONG!\"\n");
-                }
-    
-                context.getOutputWriter().write(" \"Correct!\"\n");
-                Command c = new LookCommand();
-                try {
-                    c.setArguments(new String[0]);
-                    c.run(context);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+      entryEventMap.put("DHH", (context) -> {
+         Player player = context.getPlayer();
+
+         if (!ForceLeaveEvent.containsName(player.getInventory(), "SHOVEL")) {
+            context.getOutputWriter().write(
+                  "A man holding a shovel grins from a corner, offering a riddle: \"Answer this, and you may pass. Fail, and you won’t leave...\" \n");
+            while (true) {
+               context.getOutputWriter().write(" \"What... do computers eat?\" \n> ");
+               String input = reader.getInput().trim().toUpperCase();
+               if (input.equals("CHIPS")) {
+                  break;
+               }
+               context.getOutputWriter().write(" \"WRONG!\"\n");
             }
 
-        });
-
-
-        GameContextLoader loader = new GameContextLoader(entryEventMap);
-        loader.loadContext(writer);
-        GameContext context = loader.getLoadedContext();
-        InputParser parser = new InputParser(context);
-
-        Room room = context.getPlayer().getCurrentRoom();
-        context.getPlayer().setRoom(room, context);
-
-        while(!context.isGameOver()) {
-            writer.write("> ");
-            parser.processCommand(reader.getInput());
-
-            //if the restore command was used we change to the new context. 
-            context = loader.getLoadedContext(); 
-            parser.setContext(context);
-        }
-    }
-
-    private static boolean containsNonDigit(String str) {
-        for (char c : str.toCharArray()) {
-            if (!Character.isDigit(c)) {
-                return true;
+            context.getOutputWriter().write(" \"Correct!\"\n");
+            Command c = new LookCommand();
+            try {
+               c.setArguments(new String[0]);
+               c.run(context);
+            } catch (Exception e) {
+               e.printStackTrace();
             }
-        }
-        return false;
-    }
+         }
+
+      });
+   }
 }

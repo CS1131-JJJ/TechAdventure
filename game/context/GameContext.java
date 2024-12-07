@@ -18,6 +18,7 @@ public class GameContext {
     private String[] commandNames;
 
     private boolean gameIsOver = false;
+    private boolean hasWon = false;
 
     public GameContext(Room[] rooms, Player player, OutputWriter writer, GameContextLoader loader) {
         this.player = player;
@@ -46,8 +47,17 @@ public class GameContext {
         gameIsOver = true;
     }
 
+    public void win() {
+        gameIsOver = true;
+        hasWon = true;
+    }
+
     public boolean isGameOver() {
         return gameIsOver;
+    }
+
+    public boolean hasWon() {
+        return hasWon;
     }
 
     public String[] getAllCommands() {
