@@ -15,7 +15,7 @@ A crumpled up piece of paper with hastily scrawled handwriting. The message is s
 
 ITEMDEF
 4
-chello
+cello
 A traditional wooden cello, its garnish is cracked and faded from many years of use. Though it looks particularly broken, the strings are taut, and you wonder if it could still hold a tune, or a secret…
 
 ITEMDEF
@@ -52,3 +52,8 @@ ITEMDEF
 11
 car key
 A small set of keys trapped by a rustic star wars keychain shaped as Yoda . They jingle softly with each step.
+
+ITEMDEF
+12
+Salsa
+The player will never be able to obtain this item. 
