@@ -5,7 +5,16 @@ package game.io;
  * 
  * Write output to the screen for the user to see. 
  */
-public interface OutputWriter {
-    
-    public void write(String write);
-}
+public class OutputWriter {
+
+    private StringBuilder buffer = new StringBuilder();
+
+    public void write(String text) {
+        buffer.append(text);
+    }
+
+    public String getOutput() {
+        return buffer.toString();
+    }
+
+} 
