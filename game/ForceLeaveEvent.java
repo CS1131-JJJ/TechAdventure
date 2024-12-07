@@ -41,7 +41,7 @@ public class ForceLeaveEvent {
         return false;
     }
 
-    private Room getRoom(List<Room> rooms, String name) {
+    public static Room getRoom(List<Room> rooms, String name) {
         for (Room r : rooms) {
             if (r.getName().equals(name)) {
                 return r;

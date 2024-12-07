@@ -45,6 +45,33 @@ public class Main {
             ).apply(context);
         });
 
+        entryEventMap.put("Admin Building", (context) -> {
+            Player player = context.getPlayer();
+            String input;
+            context.getOutputWriter().write("Standing at the entrance of the admin building key room, you try the door, but it’s locked. The keypad blinks mockingly at you, demanding the correct input.\n");
+            while(true) {
+                context.getOutputWriter().write("ENTER CODE (exit to leave) > ");
+                input = reader.getInput().trim().toUpperCase();
+
+                if (input.equals("EXIT")) {
+                    context.getOutputWriter().write("Defeated, you return to the plaza.\n");
+                    player.setRoom(ForceLeaveEvent.getRoom(context.getRooms(), "Plaza"), context);
+                    break;
+                }else if (input.equals("59923")) {
+                    context.getOutputWriter().write("The keypad beeps as you input the code. The key room door creaks open, revealing a golden key suspended from the ceiling. You grip your weapon tightly as you scan the room for threats\n");
+                    break;
+                }else {
+                    if (containsNonDigit(input)) {
+                        context.getOutputWriter().write("\"ERROR: DIGITS ONLY\"\n");
+                    }else if(input.length() != 5) {
+                        context.getOutputWriter().write("\"ERROR: MUST BE 5 DIGITS\"\n");
+                    }else {
+                        context.getOutputWriter().write("\"ERROR: INCORRECT CODE\"\n");
+                    }
+                }
+            }
+        });
+
         entryEventMap.put("Mt. Ripley", (context) -> {
             context.getOutputWriter().write("\nYOU WIN!!\n");
             context.endGame();
@@ -57,8 +84,8 @@ public class Main {
                 context.getOutputWriter().write("A man holding a shovel grins from a corner, offering a riddle: \"Answer this, and you may pass. Fail, and you won’t leave...\" \n");
                 while(true) {
                     context.getOutputWriter().write(" \"What... do computers eat?\" \n> ");
-                    String input = reader.getInput().trim().toLowerCase();
-                    if (input.equals("chips")) {
+                    String input = reader.getInput().trim().toUpperCase();
+                    if (input.equals("CHIPS")) {
                         break;
                     }
                     context.getOutputWriter().write(" \"WRONG!\"\n");
@@ -93,5 +120,14 @@ public class Main {
             context = loader.getLoadedContext(); 
             parser.setContext(context);
         }
+    }
+
+    private static boolean containsNonDigit(String str) {
+        for (char c : str.toCharArray()) {
+            if (!Character.isDigit(c)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
