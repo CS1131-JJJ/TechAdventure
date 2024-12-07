@@ -57,6 +57,7 @@ public class MapCommand extends Command {
                 }
     
                 char space = '\u0020';
+                //char space = 'O';
     
                 for (int i = 0; i < context.getRooms().size(); i++) {
                     if (!context.getRooms().get(i).getIsVisible()) {
