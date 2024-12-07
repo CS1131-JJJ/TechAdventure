@@ -27,6 +27,7 @@ public class InputParser {
         commandTable.put("RESTORE", new RestoreCommand());
         commandTable.put("HELP", new HelpCommand());
         commandTable.put("USE", new UseCommand());
+        commandTable.put("QUIT", new QuitCommand());
         // NEW COMMANDS MUST BE IN ALL CAPS
 
         setContext(context);
